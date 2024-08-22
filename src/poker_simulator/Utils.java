@@ -1,7 +1,10 @@
 package poker_simulator;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
 
@@ -373,64 +376,79 @@ public class Utils {
 		}
 		return suit;
 	}
-	// 6 8 T Q A
-	// 6 8 10 12 14
 
-	// 6 7 8 12 14
-	// 6 7 9 12 14
-	public synchronized List<String> getHandForStraight(List<Card> board) {
-		List<String> neededHand = new ArrayList<String>();
+	public synchronized List<List<Integer>> getHandsForStraight(List<Card> board) {
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
 		sortedBoard.sort(new CardComparator());
-		
+
 		List<Integer> boardValues = new ArrayList<Integer>();
 		for (Card card : sortedBoard) {
+			if (card.getValue() == 14) {
+				boardValues.add(1);
+			}
 			boardValues.add(card.getValue());
 		}
 		
-		List<List<Card>> straightCardsList = new ArrayList<List<Card>>();
-		for (int compareValue : boardValues) {
-			List<Card> straightCards = new ArrayList<Card>();
-			for (int value : boardValues) {
-				if (compareValue == value) {
+		if(boardValues.contains(1) && boardValues.contains(14)) {
+			sortedBoard.add(new Card("1", "#"));
+			sortedBoard.sort(new CardComparator());
+		}
+		Collections.sort(boardValues);
+
+		List<List<Integer>> combinationList = new ArrayList<List<Integer>>();
+		for (Card referenceCard : sortedBoard) {
+			List<Integer> possibleHand = new ArrayList<Integer>();
+
+			possibleHand.add(referenceCard.getValue());
+
+			for (int comparedCard : boardValues) {
+				if (referenceCard.getValue() == comparedCard) {
 					continue;
 				}
 
-				if (compareValue + 4 >= value) {
-					straightCards.add(sortedBoard.get(boardValues.indexOf(value)));
-				} else {
-					straightCards = new ArrayList<Card>();
-					break;
+				if (comparedCard <= referenceCard.getValue() + 4 && comparedCard >= referenceCard.getValue() - 4) {
+					if (possibleHand.size() < 3 && possibleHand.get(0) < comparedCard - 4) {
+						break;
+					}
+
+					if (!possibleHand.contains(comparedCard)) {
+						possibleHand.add(comparedCard);
+					}
+
+					if (possibleHand.size() > 2) {
+						List<Integer> removeList = new ArrayList<Integer>();
+						for (int card : possibleHand) {
+							if (card == comparedCard) {
+								continue;
+							}
+							if (card < possibleHand.get(possibleHand.size() - 1) - 4) {
+								removeList.add(card);
+							}
+						}
+						possibleHand.removeAll(removeList);
+					}
 				}
 			}
-			if(straightCards.size() > 2) {
-				straightCards = new ArrayList<Card>();
-			} else {
-				straightCardsList.add(straightCards);
+
+			if (possibleHand.size() >= 3) {
+				Collections.sort(possibleHand);
+				combinationList.add(possibleHand);
 			}
 		}
 
-		List<Integer> straightValues = new ArrayList<Integer>();
-		for (List<Card> cardList : straightCardsList) {
-			for(Card card : cardList) {
-				straightValues.add(card.getValue());
-			}
-		}
-		
-		if(straightCardsList.size() > 0) {
-			for(List<Card> straightCards : straightCardsList) {
-				for (int i = straightCards.get(0).getValue(); i < straightCards.get(straightCards.size() - 1).getValue(); i++) {
-					if(!straightValues.contains(i)) {
-//						System.err.print("Missing " + i + " ");
-						neededHand.add(String.valueOf(i));
-					}
-				}
-				neededHand.add("|");
-			}
-		}
+		Set<List<Integer>> set = new HashSet<>(combinationList);
+		combinationList.clear();
+		combinationList.addAll(set);
+
+		return combinationList;
+	}
+	
+	public synchronized List<List<Card>> getNeededHandsForPossibleStraights(List<List<Integer>> possibleStraightList) {
+		if(possibleStraightList != null && possibleStraightList.size() > 0) {
 			
-		return neededHand;
+		}
+		return null;
 	}
 
 	private synchronized int factorialOf(int n) {
