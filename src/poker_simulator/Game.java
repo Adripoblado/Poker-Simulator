@@ -62,8 +62,8 @@ public class Game extends Thread {
 						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
 			}
 
-			winner = calculateWinner().getId();
-			System.out.println("\n\tWinner: " + winner);
+//			winner = calculateWinner().getId();
+//			System.out.println("\n\tWinner: " + winner);
 		}
 	}
 

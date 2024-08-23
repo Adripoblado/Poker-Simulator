@@ -9,6 +9,7 @@ import java.util.Set;
 public class Utils {
 
 	Player player;
+	String[] suits = { "♥", "♦", "♣", "♠" };
 
 	public Utils(Player player) {
 		this.player = player;
@@ -87,7 +88,6 @@ public class Utils {
 		sortedBoard.addAll(board);
 
 		sortedBoard.sort(new CardComparator());
-		String[] suits = { "♥", "♦", "♣", "♠" };
 		Card higherCard = null;
 		for (String suit : suits) {
 			int matches = 0;
@@ -109,7 +109,6 @@ public class Utils {
 
 		sortedBoard.sort(new CardComparator());
 		Card higherCard = null;
-		String[] suits = { "♥", "♦", "♣", "♠" };
 		for (String suit : suits) {
 			int matches = 0;
 			for (Card card : sortedBoard) {
@@ -361,7 +360,6 @@ public class Utils {
 
 	private synchronized String getFlushSuit(List<Card> board) {
 		String suit = null;
-		String[] suits = { "♥", "♦", "♣", "♠" };
 
 		for (String s : suits) {
 			int matches = 0;
@@ -378,50 +376,66 @@ public class Utils {
 	}
 
 	public synchronized List<List<Integer>> getHandsForStraight(List<Card> board) {
+//		Create a new list of cards to avoid sorting the original and changing board order
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
 		sortedBoard.sort(new CardComparator());
 
+//		Translate cards into int values (obtained from Card.getValue();) to make it easier to manage cards order
 		List<Integer> boardValues = new ArrayList<Integer>();
 		for (Card card : sortedBoard) {
+//			If current card is an Ace then we add an extra value to our list to take into account low straights (Ace to five)
 			if (card.getValue() == 14) {
 				boardValues.add(1);
 			}
 			boardValues.add(card.getValue());
 		}
-		
-		if(boardValues.contains(1) && boardValues.contains(14)) {
+
+//		Create a new Card with Card.index = 1 if there is any Ace in the board to match boardValues size and take low straights into account
+		if (boardValues.contains(1) && boardValues.contains(14)) {
 			sortedBoard.add(new Card("1", "#"));
 			sortedBoard.sort(new CardComparator());
 		}
 		Collections.sort(boardValues);
 
+//		A list of hands (included in another list of card values List<Integer>)
 		List<List<Integer>> combinationList = new ArrayList<List<Integer>>();
 		for (Card referenceCard : sortedBoard) {
+			if (referenceCard.equals(sortedBoard.get(sortedBoard.size() - 2))) {
+				break;
+			}
 			List<Integer> possibleHand = new ArrayList<Integer>();
-
 			possibleHand.add(referenceCard.getValue());
 
-			for (int comparedCard : boardValues) {
+			for (int i = sortedBoard.indexOf(referenceCard); i < sortedBoard.size(); i++) {
+				int comparedCard = boardValues.get(i);
+//			for (int comparedCard : boardValues) {
 				if (referenceCard.getValue() == comparedCard) {
 					continue;
 				}
 
+//				Check if board card value is among +-4 the reference card value (this means that current card can form a straight with the card we took as a reference on the previous for() loop)
 				if (comparedCard <= referenceCard.getValue() + 4 && comparedCard >= referenceCard.getValue() - 4) {
+//					If the card exceeds the value of the reference card so they cannot form a straight loop is broken, saving all the cards that are valid to form a straight
 					if (possibleHand.size() < 3 && possibleHand.get(0) < comparedCard - 4) {
 						break;
 					}
 
+//					If there is more than one hand with the same value (e.g. two Jacks) it is not added to the list and we skip into the next card on the board
 					if (!possibleHand.contains(comparedCard)) {
 						possibleHand.add(comparedCard);
+						continue;
 					}
 
+//					If there is at least 3 cards on the candidates list (which means that the possibility of a straight within a hand exists) then we check if all those cards are compatible between themselves
 					if (possibleHand.size() > 2) {
+//						Create a card value list with those cards which may be removed from the final list due to incompatibilities
 						List<Integer> removeList = new ArrayList<Integer>();
 						for (int card : possibleHand) {
 							if (card == comparedCard) {
 								continue;
 							}
+//							Check if the card can form a straight with the highest card over the candidates
 							if (card < possibleHand.get(possibleHand.size() - 1) - 4) {
 								removeList.add(card);
 							}
@@ -431,24 +445,95 @@ public class Utils {
 				}
 			}
 
+//			Once all combinations are examinated and incompatibilities are removed, check if the combination remains as big as it is needed to be able to form a straight with (max) two more cards
 			if (possibleHand.size() >= 3) {
 				Collections.sort(possibleHand);
 				combinationList.add(possibleHand);
 			}
 		}
 
+//		Create a Set<List<Integer>> to remove duplicate combinations
 		Set<List<Integer>> set = new HashSet<>(combinationList);
 		combinationList.clear();
 		combinationList.addAll(set);
 
 		return combinationList;
 	}
-	
+
 	public synchronized List<List<Card>> getNeededHandsForPossibleStraights(List<List<Integer>> possibleStraightList) {
-		if(possibleStraightList != null && possibleStraightList.size() > 0) {
-			
+//		A List<> where needed hands for a straight (List<Card>) are stored
+		List<List<Card>> neededHands = new ArrayList<List<Card>>();
+
+//		Check if there are possible combinations, otherwise, nothing happens
+		if (possibleStraightList != null && possibleStraightList.size() > 0) {
+//			Go through every possible straight combination
+			for (List<Integer> hand : possibleStraightList) {
+//				For every combination, go through all its cards
+				for (int cardValue : hand) {
+					List<Card> board = new ArrayList<Card>();
+
+//					Get as a maximum reference value the value of the current card -4
+					int maxValue = hand.get(hand.size() - 1) + 4;
+					if (maxValue > 14) {
+						maxValue = 14;
+					}
+
+//					Get as minimum reference value the value of the current card + 4
+					int minValue = cardValue - 4;
+					if (minValue < 1) {
+						minValue = 1;
+					}
+
+//					Variable to count the number of carts needed to form a straight
+					int handCardCount = 0;
+
+//					Start the loop between minimum and maximum values
+					for (int i = minValue; i <= maxValue; i++) {
+//						If the card is already on the table, then a card with no suit is created and added to the board
+						if (hand.contains(i)) {
+							board.add(new Card(String.valueOf(i), ""));
+						}
+//						If the card is not currently on the table, a new card is created with a # as suit to distinguish it from existent cards
+						else {
+							board.add(new Card(String.valueOf(i), "#"));
+							handCardCount++;
+						}
+//						When the board reaches 5 cards break the loop to check for straights
+						if (board.size() == 5) {
+							break;
+						}
+					}
+
+//					If board contains a value straight and there are no more than 2 non-existant hands on the supossed board, add the board into the list (if is not already in it)
+					if (hasStraight(board) != null && handCardCount <= 2) {
+						if (!neededHands.contains(board)) {
+							neededHands.add(board);
+						}
+					}
+				}
+			}
 		}
-		return null;
+
+//		To clear duplicates and remove cards that are already on the table, create a new list of hands, go through all previous 
+//		hands which has valid straights and get only those cards which are marked with a #, then add them into a new hand and add that hand into our list
+		List<List<Card>> finalHands = new ArrayList<List<Card>>();
+		for (List<Card> h : neededHands) {
+			List<Card> hand = new ArrayList<Card>();
+			for (Card card : h) {
+				if (card.getSuit().equals("#")) {
+					for (String suit : suits) {
+						hand.add(new Card(card.getIndex(), suit));
+					}
+				}
+			}
+			finalHands.add(hand);
+		}
+
+		Set<List<Card>> set = new HashSet<>(finalHands);
+		finalHands.clear();
+		finalHands.addAll(set);
+
+		return finalHands;
 	}
 
 	private synchronized int factorialOf(int n) {
