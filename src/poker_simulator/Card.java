@@ -10,6 +10,10 @@ public class Card {
 		this.index = index;
 		this.suit = suit;
 		this.value = assignValue();
+		
+		if(value > 9) {
+			this.index = assingIndex();
+		}
 	}
 
 	public String getCard() {
@@ -55,6 +59,29 @@ public class Card {
 
 	public int getValue() {
 		return this.value;
+	}
+
+	private String assingIndex() {
+		switch (value) {
+		case 10: {
+			return "T";
+		}
+		case 11: {
+			return "J";
+		}
+		case 12: {
+			return "Q";
+		}
+		case 13: {
+			return "K";
+		}
+		case 14: {
+			return "A";
+		}
+		default: {
+			return String.valueOf(value);
+		}
+		}
 	}
 
 	private int assignValue() {

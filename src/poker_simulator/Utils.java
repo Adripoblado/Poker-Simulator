@@ -145,6 +145,9 @@ public class Utils {
 		boolean pair = false, threes = false;
 		String result = "none";
 
+//		Go through all cards on the board (player's hand included), with one reference card, 
+//		if we go through the reference card we skip it, then, if any other card on the board has the same card value, 
+//		it is a match, and so a pair. If it was already a pair, it becomes a set, and, finally, if it was already a set, it becomes a poker
 		for (Card c : board) {
 			if (c.equals(card)) {
 				continue;
@@ -167,16 +170,19 @@ public class Utils {
 	}
 
 	public String getFinalCombination(List<Card> board) {
+//		Create a list of all matching cards from the board (player hand cards included)
 		List<String> matches = new ArrayList<String>();
 
 		for (Card card : board) {
 			matches.add(getMatches(card, board));
 		}
 
+//		Initialize finalResult with at least "High X" value; and do so with handValue, cardValue and calculate kickerValue previously
 		String finalResult = "High " + getHighCard(player.hand).getIndex();
 		int handValue = 1, cardValue = getHighCard(player.hand).getValue(), kickerValue = calculateKickerValue(board),
 				seccondPairValue = 0;
 
+//		Start from the combinations with the lowest value and then going up until Royal Flush
 		if (matches.contains("pairs")) {
 			finalResult = "Pair of " + board.get(matches.indexOf("pairs")).getIndex() + "'s";
 			handValue = 2;
@@ -184,6 +190,7 @@ public class Utils {
 			kickerValue = calculateKickerValue(board);
 		}
 
+//		Create a list of matches to know if, by measuring it size, has more than one pair so it can contain a two pair
 		List<Card> pairedCards = new ArrayList<Card>();
 		for (int i = 0; i < matches.size(); i++) {
 			if (matches.get(i).equals("pairs")) {
@@ -199,20 +206,24 @@ public class Utils {
 			cardValue = pairedCards.get(pairedCards.size() - 1).getValue();
 			seccondPairValue = pairedCards.get(pairedCards.size() - 3).getValue();
 
+//			If there are 6 paired cards, which means that on the board exists 3 different pairs, player must have a pocket pair, this means that the kicker is null
 			if (pairedCards.size() == 6) {
 				kickerValue = pairedCards.get(0).getValue();
 			}
 		}
 
+//		Simply check if there is a set on the match list
 		if (matches.contains("threes")) {
 			finalResult = "Set of " + board.get(matches.indexOf("threes")).getIndex() + "'s";
 			handValue = 4;
 			cardValue = board.get(matches.indexOf("threes")).getValue();
 		}
 
+//		Get highest card of a straight, if it is possible, then check if there is an Ace involved and if it is an opener or an ender to add an extra non-existent card into account
 		Card straightCard = hasStraight(board);
 		Card firstCard = null;
 		if (straightCard != null) {
+//			Get the opener to put it into the result String
 			for (Card c : board) {
 				if (c.getValue() == straightCard.getValue() - 4) {
 					firstCard = c;
@@ -227,14 +238,17 @@ public class Utils {
 			}
 			cardValue = straightCard.getValue();
 			handValue = 5;
+//			From straight up, kicker has absolute no value on any hand
 			kickerValue = 0;
 		}
 
+//		Check if there is a flush and get the highest card of that flush
 		Card flushCard = hasFlush(board);
 		if (flushCard != null) {
 			handValue = 6;
 			kickerValue = 0;
 
+//			Get the highest suited with the flush card on the player's hand to know the card value in case anyone else has a flush
 			List<Card> higherSuited = new ArrayList<Card>();
 			for (Card card : player.getHand()) {
 				if (card.getSuit().equals(flushCard.getSuit())) {
@@ -255,6 +269,7 @@ public class Utils {
 			}
 		}
 
+//		If on matches list exists a set and a pair, there is a full-house
 		if (matches.contains("threes") && matches.contains("pairs")) {
 			finalResult = "Full house, " + board.get(matches.indexOf("threes")).getIndex() + "'s over "
 					+ board.get(matches.indexOf("pairs")).getIndex() + "'s";
@@ -262,6 +277,7 @@ public class Utils {
 			kickerValue = 0;
 		}
 
+//		Simply check if there is a poker on the board
 		if (matches.contains("poker")) {
 			finalResult = "Poker of " + board.get(matches.indexOf("poker")).getIndex() + "'s";
 			handValue = 8;
@@ -269,6 +285,8 @@ public class Utils {
 			kickerValue = 0;
 		}
 
+//		If there is a straight and a flush on the table, we then need to check if there is a straight flush.
+//		For this the straight must be all suited
 		if ((straightCard != null && flushCard != null)) {
 			Card straightFlush = hasStraightFlush(board);
 			if (straightFlush != null) {
@@ -306,13 +324,16 @@ public class Utils {
 
 		int kickerValue = 0;
 
+//		If the player has a pocket pair, then there is no kicker, so value = 0
 		if (player.hand.get(0).getIndex().equals(player.hand.get(1).getIndex())) {
 			return 0;
 		} else {
+//			Remove hand from board
 			for (Card card : player.hand) {
 				board.remove(card);
 			}
 
+//			Create two null cards, in case there is a match within some hand card and a card on the board, those cards are assigned a value
 			Card discardedCard = null;
 			Card discardedCard2 = null;
 			for (Card handCard : player.hand) {
@@ -329,17 +350,22 @@ public class Utils {
 				}
 			}
 
+//			If both cards have matched with any of the board, then there is no kicker possible (this means that player have, at least, a two pair)
 			if (discardedCard2 != null) {
 				return 0;
 			}
 
+//			If only one card from the player's hand matched any of the cards on the board, then the other card from the hand is the kicker
 			if (discardedCard != null) {
 				for (Card card : player.hand) {
 					if (!card.equals(discardedCard)) {
 						kickerValue = card.getValue();
 					}
 				}
-			} else {
+			}
+//			If none of the cards matched any of the cards on the board, kicker card will be the one with the least value 
+//			(this has a purpose, if two or more players has the same high card, then kicker comes into action to untie the board)
+			else {
 				for (Card card : player.hand) {
 					if (player.getHandValue() > 1) {
 						kickerValue = getHighCard(player.hand).getValue();
@@ -355,6 +381,7 @@ public class Utils {
 	}
 
 	public synchronized List<Card> calculateBestHandPossible(List<Card> board) {
+//		TODO
 		return null;
 	}
 
@@ -536,7 +563,7 @@ public class Utils {
 		return finalHands;
 	}
 
-	private synchronized int factorialOf(int n) {
+	private synchronized long factorialOf(int n) {
 		int result = 1;
 
 		for (int factor = 2; factor <= n; factor++) {

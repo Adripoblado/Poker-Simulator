@@ -73,17 +73,7 @@ public class Player {
 		board.remove(hand.get(1));
 		
 		if(board.size() == 5) {
-//			int i = 97;
 			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);
-//			for (List<Integer> hand : handsForStraight) {
-//				char letter = (char) i;
-//				for (int cardValue : hand) {
-//					System.err.print(letter + "" +  cardValue + " ");
-//				}
-//				System.err.println();
-//				i++;
-//			}
-			
 			for (List<Card> hand : utils.getNeededHandsForPossibleStraights(handsForStraight)) {
 				for (Card card : hand) {
 					System.out.print(card.getCard() + " ");
