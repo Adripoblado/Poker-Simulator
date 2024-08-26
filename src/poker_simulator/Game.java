@@ -1,5 +1,6 @@
 package poker_simulator;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,16 +18,18 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
+		double royalFlushes = 0;
 		for (int i = 1; i <= hands; i++) {
 			String winner = "";
-//		while (!winner.contains("Split")) {
+//		int i = 1;
+//		while (!winner.contains("Royal flush")) {
 
 			lobby = new ArrayList<Player>();
 			board = new ArrayList<Card>();
 			populateDeck();
 			enrollPlayers();
 
-//			System.out.println("\tHAND N" + i);
+			System.out.println("\tHAND N" + i);
 			System.out.println("PRE-FLOP");
 			System.out.println("-----------------------------------");
 			System.out.println("\t" + printBoard(board));
@@ -62,9 +65,19 @@ public class Game extends Thread {
 						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
 			}
 
-			winner = calculateWinner().getId();
+			Player win = calculateWinner();
+			winner = win.getId() + "> " + win.calculateHandValue(board);
 			System.out.println("\n\tWinner: " + winner);
+
+			if (winner.contains("Royal flush")) {
+				royalFlushes++;
+			}
+//			i++;
 		}
+
+		System.out.println("Total royal flushes on " + hands + " hands: " + royalFlushes);
+		DecimalFormat df = new DecimalFormat("0.0000000000");
+		System.out.println("Royal flush %: " + df.format(royalFlushes / hands));
 	}
 
 	private String printBoard(List<Card> board) {

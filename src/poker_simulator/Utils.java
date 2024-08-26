@@ -104,41 +104,49 @@ public class Utils {
 	}
 
 	public Card hasStraightFlush(List<Card> board) {
+		Card returnCard = null;
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
 
+		for (Card card : board) {
+			if (card.getIndex().equals("A")) {
+				sortedBoard.add(new Card("1", card.getSuit()));
+			}
+		}
+
 		sortedBoard.sort(new CardComparator());
-		Card higherCard = null;
-		for (String suit : suits) {
-			int matches = 0;
+
+		Card ender = hasStraight(board);
+		Card opener = null;
+		if (ender != null) {
 			for (Card card : sortedBoard) {
-				if (card.getSuit().equals(suit)) {
-					if (sortedBoard.indexOf(card) == sortedBoard.size() - 1) {
-						continue;
-					}
-
-					if (card.getValue() == sortedBoard.get(sortedBoard.indexOf(card) + 1).getValue()) {
-						continue;
-					}
-
-					if (card.getValue() + 12 == sortedBoard.get(sortedBoard.size() - 1).getValue()) {
-						matches++;
-					}
-
-					if (card.getValue() == sortedBoard.get(sortedBoard.indexOf(card) + 1).getValue() - 1) {
-						matches++;
-					} else {
-						matches = 1;
-					}
-
-					if (matches > 4) {
-						higherCard = card;
-					}
+				if (card.getValue() == ender.getValue() - 4) {
+					opener = card;
 				}
 			}
 		}
 
-		return higherCard;
+		if (opener != null) {
+			int suitedCards = 0;
+			for (Card card : sortedBoard) {
+				if (card == ender) {
+					suitedCards++;
+					break;
+				}
+
+				if (card.getValue() >= opener.getValue() && card.getSuit().equals(ender.getSuit())) {
+					suitedCards++;
+				}
+			}
+
+			if (suitedCards >= 5) {
+				returnCard = ender;
+			}
+		} else {
+			returnCard = null;
+		}
+
+		return returnCard;
 	}
 
 	public String getMatches(Card card, List<Card> board) {
@@ -291,6 +299,15 @@ public class Utils {
 			Card straightFlush = hasStraightFlush(board);
 			if (straightFlush != null) {
 				for (Card c : board) {
+					if (straightFlush.getValue() == 5) {
+						if (c.getValue() == 14) {
+							firstCard = c;
+							break;
+						} else {
+							continue;
+						}
+					}
+
 					if (c.getValue() == straightFlush.getValue() - 4) {
 						firstCard = c;
 						break;

@@ -72,15 +72,15 @@ public class Player {
 		board.remove(hand.get(0));
 		board.remove(hand.get(1));
 		
-		if(board.size() == 5) {
-			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);
-			for (List<Card> hand : utils.getNeededHandsForPossibleStraights(handsForStraight)) {
-				for (Card card : hand) {
-					System.out.print(card.getCard() + " ");
-				}
-				System.out.println();
-			}
-		}
+//		if(board.size() == 5) {
+//			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);
+//			for (List<Card> hand : utils.getNeededHandsForPossibleStraights(handsForStraight)) {
+//				for (Card card : hand) {
+//					System.out.print(card.getCard() + " ");
+//				}
+//				System.out.println();
+//			}
+//		}
 		
 		return cardComb;
 	}
