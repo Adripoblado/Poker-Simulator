@@ -1,0 +1,35 @@
+	WINNERS (Million Hands)
+High cards: 	0,0140%	
+Pairs:			13,3700%
+Two pairs: 		29,1546%	
+Threes: 		15,0136%
+Straight:		17,8846%	
+Flush:			11,8135%
+Full-House:		11,5380%
+Poker:			1,0447%	
+Straight Flush: 0,1461%
+Royal Flush: 	0,0209%
+	
+	ALL HANDS - POCKET CARDS INCLUDED (Million Hands)
+High cards: 	17,41357143%	
+Pairs:			43,80505714%
+Two pairs: 		23,51698571%	
+Threes: 		4,88641429%
+Straight:		4,60870000%	
+Flush:			3,00967143%
+Full-House:		2,56500000%
+Poker:			0,17007143%	
+Straight Flush: 0,02191429%
+Royal Flush: 	0,00261429%
+	
+	ALL HANDS - POCKET CARDS EXCLUDED (Million Hands | Ten Million Hands)
+High cards: 	50,0868% > Desviation: -0,0309%		| 50,14638% > Desviation: +0,02868%
+Pairs:			42,3089% > Desviation: -0,0493%		| 42,24586% > Desviation: -0,01104%
+Two pairs: 		4,7547% > Desviation:  +0,0008%		| 4,74136% > Desviation:  -0,01254%
+Threes: 		2,0944% > Desviation:  -0,0184%		| 2,10904% > Desviation:  -0,00376%
+Straight:		0,3899% > Desviation:  -0,0026%		| 0,39280% > Desviation:  +0,00030%
+Flush:			0,1908% > Desviation:  -0,0057%		| 0,19628% > Desviation:  -0,00022%
+Full-House:		0,1495% > Desviation:  +0,0054%		| 0,14304% > Desviation:  -0,00106%
+Poker:			0,0234% > Desviation:  -0,00061%	| 0,02367% > Desviation:  -0,00034%
+Straight Flush: 0,0016% > Desviation:  +0,00021% 	| 0,00143% > Desviation:  +0,00004%
+Royal Flush: 	0,0000% > Desviation:  -0,000154%	| 0,00014% > Desviation:  -0,000014%

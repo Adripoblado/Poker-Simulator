@@ -413,22 +413,22 @@ public class Utils {
 		return null;
 	}
 
-	private synchronized String getFlushSuit(List<Card> board) {
-		String suit = null;
-
-		for (String s : suits) {
-			int matches = 0;
-			for (Card card : board) {
-				if (card.getSuit().equals(s)) {
-					matches++;
-				}
-			}
-			if (matches >= 3) {
-				suit = s;
-			}
-		}
-		return suit;
-	}
+//	private synchronized String getFlushSuit(List<Card> board) {
+//		String suit = null;
+//
+//		for (String s : suits) {
+//			int matches = 0;
+//			for (Card card : board) {
+//				if (card.getSuit().equals(s)) {
+//					matches++;
+//				}
+//			}
+//			if (matches >= 3) {
+//				suit = s;
+//			}
+//		}
+//		return suit;
+//	}
 
 	public synchronized List<List<Integer>> getHandsForStraight(List<Card> board) {
 //		Create a new list of cards to avoid sorting the original and changing board order
@@ -591,13 +591,13 @@ public class Utils {
 		return finalHands;
 	}
 
-	private synchronized long factorialOf(int n) {
-		int result = 1;
-
-		for (int factor = 2; factor <= n; factor++) {
-			result *= factor;
-		}
-
-		return result;
-	}
+//	private synchronized long factorialOf(int n) {
+//		int result = 1;
+//
+//		for (int factor = 2; factor <= n; factor++) {
+//			result *= factor;
+//		}
+//
+//		return result;
+//	}
 }

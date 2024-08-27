@@ -63,14 +63,18 @@ public class Player {
 		this.kickerValue = rate;
 	}
 	
-	public synchronized String calculateHandValue(List<Card> board) {
-		board.add(hand.get(0));
-		board.add(hand.get(1));
+	public synchronized String calculateHandValue(List<Card> board, boolean test) {
+		if(!test) {
+			board.add(hand.get(0));
+			board.add(hand.get(1));
+		}
 
 		String cardComb = utils.getFinalCombination(board);
 
-		board.remove(hand.get(0));
-		board.remove(hand.get(1));
+		if(!test) {
+			board.remove(hand.get(0));
+			board.remove(hand.get(1));
+		}
 		
 //		if(board.size() == 5) {
 //			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);

@@ -18,11 +18,12 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
-//		double royalFlushes = 0;
-//		for (int i = 1; i <= hands; i++) {
+		double royalFlushes = 0, straightFlushes = 0, pokers = 0, fullHouses = 0, flushes = 0, straights = 0,
+				threes = 0, twoPairs = 0, pairs = 0, highCards = 0;
+		for (int i = 1; i <= hands; i++) {
 			String winner = "";
-		int i = 1;
-		while (!winner.contains("Straight flush")) {
+//		int i = 1;
+//		while (!winner.contains("Straight flush")) {
 
 			lobby = new ArrayList<Player>();
 			board = new ArrayList<Card>();
@@ -35,7 +36,7 @@ public class Game extends Thread {
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
 				System.out
-						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board, false));
 			}
 
 			runBoard(true);
@@ -44,7 +45,7 @@ public class Game extends Thread {
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
 				System.out
-						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board, false));
 			}
 
 			runBoard(false);
@@ -53,7 +54,7 @@ public class Game extends Thread {
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
 				System.out
-						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board, false));
 			}
 
 			runBoard(false);
@@ -61,23 +62,68 @@ public class Game extends Thread {
 			System.out.println("-----------------------------------");
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
-				System.out
-						.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+				String handValue = player.calculateHandValue(board, true);
+				System.out.println(player.getId() + ": " + player.printHand() + " > " + handValue);
+
+				if (handValue.contains("Royal flush")) {
+					royalFlushes++;
+				}
+				if (handValue.contains("Straight flush")) {
+					straightFlushes++;
+				}
+				if (handValue.contains("Poker")) {
+					pokers++;
+				}
+				if (handValue.contains("Full house")) {
+					fullHouses++;
+				}
+				if (handValue.contains("Flush of")) {
+					flushes++;
+				}
+				if (handValue.contains("Straight, ")) {
+					straights++;
+				}
+				if (handValue.contains("Set")) {
+					threes++;
+				}
+				if (handValue.contains("Two pair")) {
+					twoPairs++;
+				}
+				if (handValue.contains("Pair")) {
+					pairs++;
+				}
+				if (handValue.contains("High")) {
+					highCards++;
+				}
 			}
 
 			Player win = calculateWinner();
-			winner = win.getId() + "> " + win.calculateHandValue(board);
+			winner = win.getId() + "> " + win.calculateHandValue(board, false);
 			System.out.println("\n\tWinner: " + winner);
-
-//			if (winner.contains("Royal flush")) {
-//				royalFlushes++;
-//			}
-			i++;
+//			i++;
 		}
+		DecimalFormat df = new DecimalFormat("0.00000000");
 
-//		System.out.println("Total royal flushes on " + hands + " hands: " + royalFlushes);
-//		DecimalFormat df = new DecimalFormat("0.0000000000");
-//		System.out.println("Royal flush %: " + df.format(royalFlushes / hands));
+		System.out.println("Total high cards on " + hands + " hands: " + highCards);
+		System.out.println("High card %: " + df.format((highCards * 100) / (hands * lobby.size())));
+		System.out.println("Total pairs on " + hands + " hands: " + pairs);
+		System.out.println("Pair %: " + df.format((pairs * 100) / (hands * lobby.size())));
+		System.out.println("Total two pairs on " + hands + " hands: " + twoPairs);
+		System.out.println("Two pair %: " + df.format((twoPairs * 100) / (hands * lobby.size())));
+		System.out.println("Total threes on " + hands + " hands: " + threes);
+		System.out.println("Three %: " + df.format((threes * 100) / (hands * lobby.size())));
+		System.out.println("Total straights on " + hands + " hands: " + straights);
+		System.out.println("Straight %: " + df.format((straights * 100) / (hands * lobby.size())));
+		System.out.println("Total flushes on " + hands + " hands: " + flushes);
+		System.out.println("Flush %: " + df.format((flushes * 100) / (hands * lobby.size())));
+		System.out.println("Total full houses on " + hands + " hands: " + fullHouses);
+		System.out.println("Full house %: " + df.format((fullHouses * 100) / (hands * lobby.size())));
+		System.out.println("Total pokers on " + hands + " hands: " + pokers);
+		System.out.println("Poker %: " + df.format((pokers * 100) / (hands * lobby.size())));
+		System.out.println("Total straight flushes on " + hands + " hands: " + straightFlushes);
+		System.out.println("Straight flush %: " + df.format((straightFlushes * 100) / (hands * lobby.size())));
+		System.out.println("Total royal flushes on " + hands + " hands: " + royalFlushes);
+		System.out.println("Royal flush %: " + df.format((royalFlushes * 100) / (hands * lobby.size())));
 	}
 
 	private String printBoard(List<Card> board) {
@@ -199,7 +245,10 @@ public class Game extends Thread {
 										}
 									}
 								}
-							} else {
+							}
+//							If hand value is not two pair, then check to untie on another way
+							else {
+//								Check if hand value is higher than a set, because kicker is only taken into account until that value
 								if (player.getHandValue() > 4) {
 									winner = new Player("Split, " + player.getId() + " and " + winner.getId(),
 											player.getHand());
@@ -228,7 +277,9 @@ public class Game extends Thread {
 			}
 		}
 
+//		If there is more than one player on the split players' list, then it is definitely a split
 		if (split.size() > 1) {
+//			Create a String with those players to print whose are splitting the pot
 			StringBuilder id = new StringBuilder();
 			id.append("Split between: ");
 			for (Player player : split) {
@@ -237,6 +288,7 @@ public class Game extends Thread {
 					id.append(" and ");
 				}
 			}
+//			Create a new Player with this new info about the split
 			winner = new Player(id.toString(), split.get(0).getHand());
 		}
 
