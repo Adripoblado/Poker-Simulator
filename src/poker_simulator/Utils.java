@@ -42,31 +42,40 @@ public class Utils {
 	}
 
 	public Card hasStraight(List<Card> board) {
+//		Create a new list to avoid working with the original one and modifying it
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
 
 		sortedBoard.sort(new CardComparator());
 
+//		Create a new card which, in case there is a straight, it will take the highest value of the straight
 		Card higherCard = null;
 		int consecutiveCards = 1;
 		for (Card card : sortedBoard) {
+//			Skip card if it's the first on the board
 			if (sortedBoard.indexOf(card) == sortedBoard.size() - 1) {
 				continue;
 			}
 
+//			Skip the card if it has the same value as the next card on the board
 			if (card.getValue() == sortedBoard.get(sortedBoard.indexOf(card) + 1).getValue()) {
 				continue;
 			}
 
+//			If the card is a 2 and there is an Ace on the board add one consecutive card
 			if (card.getValue() + 12 == sortedBoard.get(sortedBoard.size() - 1).getValue()) {
 				consecutiveCards++;
 			}
 
+//			If value of the current card is one point less than the next card add one consecutive card, otherwise straight is broken and consecutive card counter is set to 1
 			if (card.getValue() == sortedBoard.get(sortedBoard.indexOf(card) + 1).getValue() - 1) {
 				consecutiveCards++;
 			} else {
 				consecutiveCards = 1;
 			}
+//			If there is a straight, get the value of the card ahead of the current card. 
+//			This is because consecutiveCards is initialized with value 1 (as we have to take into account that there is always one consecutive card), 
+//			so when we calculate if the next card's value is a single point ahead of current, we need to take the index of the reference card plus 1 (the index of the last card on the straight)
 			if (consecutiveCards > 4) {
 				higherCard = sortedBoard.get(sortedBoard.indexOf(card) + 1);
 			}
@@ -89,6 +98,7 @@ public class Utils {
 
 		sortedBoard.sort(new CardComparator());
 		Card higherCard = null;
+//		Count how many cards of each suit are on the board, if there is at least 5 of one, there is a flush of that suit (as it is impossible to have two different flushes)
 		for (String suit : suits) {
 			int matches = 0;
 			for (Card card : sortedBoard) {
@@ -108,6 +118,7 @@ public class Utils {
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
 
+//		If there is an Ace on the board, create a new Card with Card.index = 1 to take the Ace into account on both high and low straights
 		for (Card card : board) {
 			if (card.getIndex().equals("A")) {
 				sortedBoard.add(new Card("1", card.getSuit()));

@@ -18,11 +18,11 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
-		double royalFlushes = 0;
-		for (int i = 1; i <= hands; i++) {
+//		double royalFlushes = 0;
+//		for (int i = 1; i <= hands; i++) {
 			String winner = "";
-//		int i = 1;
-//		while (!winner.contains("Royal flush")) {
+		int i = 1;
+		while (!winner.contains("Straight flush")) {
 
 			lobby = new ArrayList<Player>();
 			board = new ArrayList<Card>();
@@ -69,15 +69,15 @@ public class Game extends Thread {
 			winner = win.getId() + "> " + win.calculateHandValue(board);
 			System.out.println("\n\tWinner: " + winner);
 
-			if (winner.contains("Royal flush")) {
-				royalFlushes++;
-			}
-//			i++;
+//			if (winner.contains("Royal flush")) {
+//				royalFlushes++;
+//			}
+			i++;
 		}
 
-		System.out.println("Total royal flushes on " + hands + " hands: " + royalFlushes);
-		DecimalFormat df = new DecimalFormat("0.0000000000");
-		System.out.println("Royal flush %: " + df.format(royalFlushes / hands));
+//		System.out.println("Total royal flushes on " + hands + " hands: " + royalFlushes);
+//		DecimalFormat df = new DecimalFormat("0.0000000000");
+//		System.out.println("Royal flush %: " + df.format(royalFlushes / hands));
 	}
 
 	private String printBoard(List<Card> board) {
@@ -142,18 +142,18 @@ public class Game extends Thread {
 	private void enrollPlayers() {
 		Player player1 = new Player("Player 1", getHand());
 		lobby.add(player1);
-//		Player player2 = new Player("Player 2", getHand());
-//		lobby.add(player2);
-//		Player player3 = new Player("Player 3", getHand());
-//		lobby.add(player3);
-//		Player player4 = new Player("Player 4", getHand());
-//		lobby.add(player4);
-//		Player player5 = new Player("Player 5", getHand());
-//		lobby.add(player5);
-//		Player player6 = new Player("Player 6", getHand());
-//		lobby.add(player6);
-//		Player player7 = new Player("Player 7", getHand());
-//		lobby.add(player7);
+		Player player2 = new Player("Player 2", getHand());
+		lobby.add(player2);
+		Player player3 = new Player("Player 3", getHand());
+		lobby.add(player3);
+		Player player4 = new Player("Player 4", getHand());
+		lobby.add(player4);
+		Player player5 = new Player("Player 5", getHand());
+		lobby.add(player5);
+		Player player6 = new Player("Player 6", getHand());
+		lobby.add(player6);
+		Player player7 = new Player("Player 7", getHand());
+		lobby.add(player7);
 	}
 
 	private synchronized Player calculateWinner() {
