@@ -1,5 +1,7 @@
 package poker_simulator;
 
+import java.util.Objects;
+
 public class Card {
 
 	String index;
@@ -109,5 +111,24 @@ public class Card {
 			}
 			}
 		}
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) {
+	        return true;
+	    }
+	    if (obj == null || getClass() != obj.getClass()) {
+	        return false;
+	    }
+	    Card card = (Card) obj;
+	    return value == card.value &&
+	           Objects.equals(index, card.index) &&
+	           Objects.equals(suit, card.suit);
+	}
+	
+	@Override
+	public int hashCode() {
+	    return Objects.hash(index, suit, value);
 	}
 }

@@ -30,52 +30,55 @@ public class Player {
 	public synchronized String printHand() {
 		return hand.get(0).getCard() + " " + hand.get(1).getCard();
 	}
-	
+
 	public int getHandValue() {
 		return this.handValue;
 	}
-	
+
 	public void setHandValue(int rate) {
 		this.handValue = rate;
 	}
-	
+
 	public int getCardValue() {
 		return this.cardValue;
 	}
-	
+
 	public void setCardValue(int rate) {
 		this.cardValue = rate;
 	}
-	
+
 	public int getSeccondPairValue() {
 		return this.seccondPairValue;
 	}
-	
+
 	public void setSeccondPairValue(int rate) {
 		this.seccondPairValue = rate;
 	}
-	
+
 	public int getKickerValue() {
 		return this.kickerValue;
 	}
-	
+
 	public void setKickerValue(int rate) {
 		this.kickerValue = rate;
 	}
-	
-	public synchronized String calculateHandValue(List<Card> board, boolean test) {
-		if(!test) {
-			board.add(hand.get(0));
-			board.add(hand.get(1));
-		}
+
+	public synchronized String calculateHandValue(List<Card> board) {
+		board.addAll(this.hand);
 
 		String cardComb = utils.getFinalCombination(board);
 
-		if(!test) {
-			board.remove(hand.get(0));
-			board.remove(hand.get(1));
-		}
-		
+		board.removeAll(this.hand);
+
+//		String flushSuit = utils.getFlushSuit(board);
+//		if (flushSuit != null) {
+//			List<Card> freeSuitedCardList = utils.getAllFreeSuitedCards(board, flushSuit);
+//
+//			for (Card card : freeSuitedCardList) {
+//				System.out.print(card.getCard() + " ");
+//			}
+//		}
+
 //		if(board.size() == 5) {
 //			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);
 //			for (List<Card> hand : utils.getNeededHandsForPossibleStraights(handsForStraight)) {
@@ -85,7 +88,7 @@ public class Player {
 //				System.out.println();
 //			}
 //		}
-		
+
 		return cardComb;
 	}
 }

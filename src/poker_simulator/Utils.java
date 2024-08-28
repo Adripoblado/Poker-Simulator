@@ -10,6 +10,7 @@ public class Utils {
 
 	Player player;
 	String[] suits = { "♥", "♦", "♣", "♠" };
+	String[] cards = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" };
 
 	public Utils(Player player) {
 		this.player = player;
@@ -413,22 +414,23 @@ public class Utils {
 		return null;
 	}
 
-//	private synchronized String getFlushSuit(List<Card> board) {
-//		String suit = null;
-//
-//		for (String s : suits) {
-//			int matches = 0;
-//			for (Card card : board) {
-//				if (card.getSuit().equals(s)) {
-//					matches++;
-//				}
-//			}
-//			if (matches >= 3) {
-//				suit = s;
-//			}
-//		}
-//		return suit;
-//	}
+	public synchronized int getFlushSuit(List<Card> board) {
+		String suit = null;
+
+		for (String s : suits) {
+			int matches = 0;
+			for (Card card : board) {
+				if (card.getSuit().equals(s)) {
+					matches++;
+				}
+			}
+			if (matches >= 3) {
+				suit = s;
+				return matches;
+			}
+		}
+		return -1;
+	}
 
 	public synchronized List<List<Integer>> getHandsForStraight(List<Card> board) {
 //		Create a new list of cards to avoid sorting the original and changing board order
@@ -500,7 +502,7 @@ public class Utils {
 				}
 			}
 
-//			Once all combinations are examinated and incompatibilities are removed, check if the combination remains as big as it is needed to be able to form a straight with (max) two more cards
+//			Once all combinations are analyzed and incompatibilities are removed, check if the combination remains as big as it is needed to be able to form a straight with (max) two more cards
 			if (possibleHand.size() >= 3) {
 				Collections.sort(possibleHand);
 				combinationList.add(possibleHand);
@@ -589,6 +591,19 @@ public class Utils {
 		finalHands.addAll(set);
 
 		return finalHands;
+	}
+
+	public List<Card> getAllFreeSuitedCards(List<Card> suitedBoard, String suit) {
+		List<Card> freeSuitedCards = new ArrayList<Card>();
+
+		for (String index : cards) {
+			Card card = new Card(index, suit);
+			if (!suitedBoard.contains(card) && !player.getHand().contains(card)) {
+				freeSuitedCards.add(card);
+			}
+		}
+
+		return freeSuitedCards;
 	}
 
 //	private synchronized long factorialOf(int n) {
