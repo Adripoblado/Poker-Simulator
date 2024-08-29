@@ -17,6 +17,7 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
+		double possibleStraights = 0, actualStraights = 0;
 		for (int i = 1; i <= hands; i++) {
 			String winner = "";
 //		int i = 1;
@@ -59,29 +60,51 @@ public class Game extends Thread {
 			System.out.println("-----------------------------------");
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
-				System.out.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+				String handValue = player.calculateHandValue(board);
+				System.out.println(player.getId() + ": " + player.printHand() + " > " + handValue);
+
+				if (player.utils.getHandsForStraight(board).size() > 0) {
+					possibleStraights++;
+					List<Card> b = new ArrayList<Card>(board);
+					b.addAll(player.getHand());
+					if (player.utils.hasStraight(b) != null) {
+						actualStraights++;
+					}
+				}
 			}
 
 			Player win = calculateWinner();
 			winner = win.getId() + "> " + win.calculateHandValue(board);
 			System.out.println("\n\tWinner: " + winner);
 		}
+		System.out.println("Possible Straights: " + possibleStraights / lobby.size());
+		System.out.println("Actual Straights: " + actualStraights);
+		System.out.println("Result: " + actualStraights + " out of " + (possibleStraights / lobby.size())
+				+ " possible straights, meaning a " + (actualStraights / (possibleStraights / lobby.size()) * 100)
+				+ "% probability of a straight when there are at least 3 candidate cards on the board");
 	}
 
 	private String printBoard(List<Card> board) {
-		String print = "";
+		StringBuilder print = new StringBuilder();
 		if (board.size() == 0) {
-			print = " - - - - -";
-		} else if (board.size() == 3) {
-			print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " - -";
-		} else if (board.size() == 4) {
-			print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
-					+ board.get(3).getCard() + " -";
-		} else if (board.size() == 5) {
-			print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
-					+ board.get(3).getCard() + " " + board.get(4).getCard();
+			print.append(" - - - - - ");
+		} else {
+			print.append(" ");
+			for(Card card : board) {
+				print.append(card.getCard() + " ");
+			}
 		}
-		return print;
+			
+//			 else if (board.size() == 3) {
+//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " - -";
+//				} else if (board.size() == 4) {
+//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
+//							+ board.get(3).getCard() + " -";
+//				} else if (board.size() == 5) {
+//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
+//							+ board.get(3).getCard() + " " + board.get(4).getCard();
+//				}
+		return print.toString();
 	}
 
 	private void runBoard(boolean flop) {

@@ -33,3 +33,18 @@ Full-House:		0,1495% > Desviation:  +0,0054%		| 0,14304% > Desviation:  -0,00106
 Poker:			0,0234% > Desviation:  -0,00061%	| 0,02367% > Desviation:  -0,00034%
 Straight Flush: 0,0016% > Desviation:  +0,00021% 	| 0,00143% > Desviation:  +0,00004%
 Royal Flush: 	0,0000% > Desviation:  -0,000154%	| 0,00014% > Desviation:  -0,000014%
+
+	ACTUAL FLUSHES WHEN BOARD HITS 3 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (100.000 Hands)
+Possible Flushes: 	32.831
+Actual Flushes: 	9.559
+Result: 			29,1158%
+
+	ACTUAL FLUSHES WHEN BOARD HITS 4 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Flushes: 	42.892
+Actual Flushes: 	104.109
+Result: 			242,7236%	(This means that every time 4 suited cards show up on the board, between 2 and 3 people off 7 players have a flush)
+
+	ACTUAL STRAIGHTS WHEN BOARD HITS 3 CANDIDATE CARDS WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Straights: 198.814
+Actual Straights: 	111.238
+Result: 			55,9508%

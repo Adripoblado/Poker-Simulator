@@ -466,7 +466,6 @@ public class Utils {
 
 			for (int i = sortedBoard.indexOf(referenceCard); i < sortedBoard.size(); i++) {
 				int comparedCard = boardValues.get(i);
-//			for (int comparedCard : boardValues) {
 				if (referenceCard.getValue() == comparedCard) {
 					continue;
 				}
