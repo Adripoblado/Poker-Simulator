@@ -65,30 +65,8 @@ public class Player {
 
 	public synchronized String calculateHandValue(List<Card> board) {
 		board.addAll(this.hand);
-
 		String cardComb = utils.getFinalCombination(board);
-
 		board.removeAll(this.hand);
-
-//		String flushSuit = utils.getFlushSuit(board);
-//		if (flushSuit != null) {
-//			List<Card> freeSuitedCardList = utils.getAllFreeSuitedCards(board, flushSuit);
-//
-//			for (Card card : freeSuitedCardList) {
-//				System.out.print(card.getCard() + " ");
-//			}
-//		}
-
-//		if(board.size() == 5) {
-//			List<List<Integer>> handsForStraight = utils.getHandsForStraight(board);
-//			for (List<Card> hand : utils.getNeededHandsForPossibleStraights(handsForStraight)) {
-//				for (Card card : hand) {
-//					System.out.print(card.getCard() + " ");
-//				}
-//				System.out.println();
-//			}
-//		}
-
 		return cardComb;
 	}
 }

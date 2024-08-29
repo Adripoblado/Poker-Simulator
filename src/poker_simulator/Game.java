@@ -9,24 +9,22 @@ public class Game extends Thread {
 	List<Card> deck;
 	List<Player> lobby;
 	List<Card> board;
-	int hands;
+	int hands, playerAmount;
 
-	public Game(int hands) {
+	public Game(int hands, int playerAmount) {
 		this.hands = hands;
+		this.playerAmount = playerAmount;
 	}
 
 	@Override
 	public void run() {
-		double possibleStraights = 0, actualStraights = 0;
 		for (int i = 1; i <= hands; i++) {
 			String winner = "";
-//		int i = 1;
-//		while (!winner.contains("Straight flush")) {
 
 			lobby = new ArrayList<Player>();
 			board = new ArrayList<Card>();
 			populateDeck();
-			enrollPlayers();
+			enrollPlayers(playerAmount);
 
 			System.out.println("\tHAND N" + i);
 			System.out.println("PRE-FLOP");
@@ -60,28 +58,13 @@ public class Game extends Thread {
 			System.out.println("-----------------------------------");
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
-				String handValue = player.calculateHandValue(board);
-				System.out.println(player.getId() + ": " + player.printHand() + " > " + handValue);
-
-				if (player.utils.getHandsForStraight(board).size() > 0) {
-					possibleStraights++;
-					List<Card> b = new ArrayList<Card>(board);
-					b.addAll(player.getHand());
-					if (player.utils.hasStraight(b) != null) {
-						actualStraights++;
-					}
-				}
+				System.out.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
 			}
 
 			Player win = calculateWinner();
 			winner = win.getId() + "> " + win.calculateHandValue(board);
 			System.out.println("\n\tWinner: " + winner);
 		}
-		System.out.println("Possible Straights: " + possibleStraights / lobby.size());
-		System.out.println("Actual Straights: " + actualStraights);
-		System.out.println("Result: " + actualStraights + " out of " + (possibleStraights / lobby.size())
-				+ " possible straights, meaning a " + (actualStraights / (possibleStraights / lobby.size()) * 100)
-				+ "% probability of a straight when there are at least 3 candidate cards on the board");
 	}
 
 	private String printBoard(List<Card> board) {
@@ -94,16 +77,6 @@ public class Game extends Thread {
 				print.append(card.getCard() + " ");
 			}
 		}
-			
-//			 else if (board.size() == 3) {
-//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " - -";
-//				} else if (board.size() == 4) {
-//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
-//							+ board.get(3).getCard() + " -";
-//				} else if (board.size() == 5) {
-//					print = " " + board.get(0).getCard() + " " + board.get(1).getCard() + " " + board.get(2).getCard() + " "
-//							+ board.get(3).getCard() + " " + board.get(4).getCard();
-//				}
 		return print.toString();
 	}
 
@@ -150,21 +123,11 @@ public class Game extends Thread {
 		return hand;
 	}
 
-	private void enrollPlayers() {
-		Player player1 = new Player("Player 1", getHand());
-		lobby.add(player1);
-		Player player2 = new Player("Player 2", getHand());
-		lobby.add(player2);
-		Player player3 = new Player("Player 3", getHand());
-		lobby.add(player3);
-		Player player4 = new Player("Player 4", getHand());
-		lobby.add(player4);
-		Player player5 = new Player("Player 5", getHand());
-		lobby.add(player5);
-		Player player6 = new Player("Player 6", getHand());
-		lobby.add(player6);
-		Player player7 = new Player("Player 7", getHand());
-		lobby.add(player7);
+	private void enrollPlayers(int playerAmount) {
+		for(int i = 1; i <= playerAmount; i++) {
+			Player player = new Player("Player " + i, getHand());
+			lobby.add(player);
+		}
 	}
 
 	private synchronized Player calculateWinner() {
