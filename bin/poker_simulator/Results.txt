@@ -34,21 +34,6 @@ Poker:			0,0234% > Desviation:  -0,00061%	| 0,02367% > Desviation:  -0,00034%
 Straight Flush: 0,0016% > Desviation:  +0,00021% 	| 0,00143% > Desviation:  +0,00004%
 Royal Flush: 	0,0000% > Desviation:  -0,000154%	| 0,00014% > Desviation:  -0,000014%
 
-	ACTUAL FLUSHES WHEN BOARD HITS 3 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (100.000 Hands)
-Possible Flushes: 	32.831
-Actual Flushes: 	9.559
-Result: 			29,1158%
-
-	ACTUAL FLUSHES WHEN BOARD HITS 4 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (Million Hands)
-Possible Flushes: 	42.892
-Actual Flushes: 	104.109
-Result: 			242,7236%	(This means that every time 4 suited cards show up on the board, between 2 and 3 people off 7 players have a flush)
-
-	ACTUAL STRAIGHTS WHEN BOARD IS CANDIDATE TO A STRAIGHT WITH 7 PLAYERS ON THE TABLE (Million Hands)
-Possible Straights: 760.514
-Actual Straights: 	338.476
-Result: 			44,5062%	(To understand this high numbers we must know that to get the actual probability of a straight showing up we need to divide the amount of straights between the number of players)
-
 	ACTUAL POKERS WHEN THERE IS A PAIR ON THE BOARD WITH 7 PLAYERS ON THE TABLE (Million Hands)
 Possible Pokers: 	472.062
 Actual Pokers: 		3.792
@@ -63,3 +48,75 @@ Result:				30,1510%	(This means that every three sets that show up on the table,
 Possible Pokers: 	491.873
 Actual Pokers: 		10.069
 Result:				2,0471%		(This means that every fifty times a pair or a set shows up on the table, almost one time a player has a poker) (This is directly related to the sum of both probabilities, poker with a pair and poker with a set on the table)
+
+	ACTUAL FULL-HOUSES WHEN THERE IS A PAIR ON THE BOARD WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Fulls:		471.251
+Actual Fulls:		135.932
+Result:				28,8449%	(This means that a bit more than 1 out of 4 times a pair shows up on the table one player gets a Full-House)
+
+	ACTUAL FLUSHES WHEN BOARD HITS 3 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Flushes: 	32.831
+Actual Flushes: 	9.559
+Result: 			29,1158%	(This means that almost 1 out of 3 times three suited cards show up on the board at least one player has a flush)
+
+	ACTUAL FLUSHES WHEN BOARD HITS 4 SUITED CARDS WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Flushes: 	42.892
+Actual Flushes: 	104.109
+Result: 			242,7236%	(This means that every time 4 suited cards show up on the board, between 2 and 3 people off 7 players have a flush)
+
+	ACTUAL STRAIGHTS WHEN BOARD IS CANDIDATE TO A STRAIGHT WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Straights: 760.514
+Actual Straights: 	338.476
+Result: 			44,5062%	(To understand this high numbers we must know that to get the actual probability of a straight showing up we need to divide the amount of straights between the number of players)
+
+	ACTUAL SETS WHEN THERE IS A PAIR ON THE BOARD WITH 7 PLAYERS ON THE TABLE (Million Hands)
+Possible Sets: 		470.847
+Actual Sets:		195.029
+Result:				41,4209%	(This means that almost half of the time a pair shows up on the table a player has a set)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	ACTUAL POKERS WHEN A PLAYER HAS POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		411.440
+Actual Pokers:		3.407
+Result: 			0,8281%		(This means that not even 1 time out of 100 pocket pairs received a player gets a poker)
+
+	ACTUAL FULL-HOUSES WHEN A PLAYER HAS POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		411.459
+Actual Full-Houses:	34.349
+Result:				8,3481%		(This means that 1 out of 12 times a player gets a pocket pair it turns into a full-house)
+
+	ACTUAL SETS WHEN A PLAYER HAS POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		410.901
+Actual Sets:		48.540
+Result:				11,8131%	(This means that slightly more than 1 out of 10 times a player gets a pocket pair it turns into a set)
+
+	ACTUAL TWO-PAIRS WHEN A PLAYER HAS POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		411.134
+Actual Two-Pairs:	163.151
+Result:				39,6832%	(This means that 4 out of 10 times a player gets a pocket pair another pair shows up on the table)
+
+	ACTUAL PAIRS WHEN A PLAYER HAS POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		411.052
+Actual Pairs: 		145.593
+Result:				35,4196%	(This means that a bit more than 1 out of 3 times a player gets pocket pairs it doesn't get better than a pair)
+
+	ACTUAL FLUSHES WHEN A PLAYER HAS A SUITED POCKET (Million Hands with 7 Players)
+Suited Pockets:		1.644.860
+Actual Flushes:		106.391
+Result:				6,4681%		(This means that only one out of almost 17 times a player has suited cards it turns into a flush)
+
+	WIN RATE WHEN A PLAYER HAS A POCKET PAIR (Million Hands with 7 Players)
+Pocket Pairs:		412.111
+Hands Won:			91.811
+Result:				22,2782%	(1 out of 5 times a player gets a pocket pair ends on a win)
+	
+	WIN RATE WHEN A PLAYER HAS A PREMIUM POCKET (Million Hands with 7 Players)
+Premium Hands:		1.002.627
+Hands Won:			220.589
+Win rate:			22,0011%	(1 out of 5 times a player gets a premium hand ends on a win)
+
+	WIN RATE WHEN A PLAYER HAS A NON-PREMIUM POCKET (Million Hands with 7 Players)
+Non-Premium Hands:	1.996.237
+Hands Won:			205.712
+Win rate:			10,3050%	(1 out of 10 times a player gets a non-premium hand ends on a win)

@@ -18,8 +18,11 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
+		double possibleHands = 0, actualHands = 0;
 		for (int i = 1; i <= hands; i++) {
 			String winner = "";
+//		int i = 1;
+//		while (!winner.contains("Straight flush")) {
 
 			lobby = new ArrayList<Player>();
 			board = new ArrayList<Card>();
@@ -58,7 +61,8 @@ public class Game extends Thread {
 			System.out.println("-----------------------------------");
 			System.out.println("\t" + printBoard(board));
 			for (Player player : lobby) {
-				System.out.println(player.getId() + ": " + player.printHand() + " > " + player.calculateHandValue(board));
+				String handValue = player.calculateHandValue(board);
+				System.out.println(player.getId() + ": " + player.printHand() + " > " + handValue);
 			}
 
 			Player win = calculateWinner();
@@ -73,7 +77,7 @@ public class Game extends Thread {
 			print.append(" - - - - - ");
 		} else {
 			print.append(" ");
-			for(Card card : board) {
+			for (Card card : board) {
 				print.append(card.getCard() + " ");
 			}
 		}
@@ -124,7 +128,7 @@ public class Game extends Thread {
 	}
 
 	private void enrollPlayers(int playerAmount) {
-		for(int i = 1; i <= playerAmount; i++) {
+		for (int i = 1; i <= playerAmount; i++) {
 			Player player = new Player("Player " + i, getHand());
 			lobby.add(player);
 		}

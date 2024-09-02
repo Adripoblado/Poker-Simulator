@@ -9,36 +9,18 @@ import java.util.Set;
 public class Utils {
 
 	Player player;
-	String[] suits = { "♥", "♦", "♣", "♠" };
-	String[] cards = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" };
+	private String[] suits = { "♥", "♦", "♣", "♠" };
+	private String[] cards = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K" };
+	private List<Card> deck;
 
 	public Utils(Player player) {
 		this.player = player;
-	}
-
-	public String getIndexByValue(int value) {
-		switch (value) {
-		case 1: {
-			return "A";
-		}
-		case 10: {
-			return "T";
-		}
-		case 11: {
-			return "J";
-		}
-		case 12: {
-			return "Q";
-		}
-		case 13: {
-			return "K";
-		}
-		case 14: {
-			return "A";
-		}
-		default: {
-			return null;
-		}
+		
+		deck = new ArrayList<Card>();
+		for(String suit : suits) {
+			for (String index : cards) {
+				deck.add(new Card(index, suit));
+			}
 		}
 	}
 
@@ -410,29 +392,64 @@ public class Utils {
 	}
 
 	public synchronized List<Card> calculateBestHandPossible(List<Card> board) {
-//		TODO
-		return null;
+		List<Card> bestHand = new ArrayList<Card>();
+		boolean straightFlush = false, poker = false, fullHouse = false, flush = false,
+				straight = false;
+
+		List<Card> suitedCards = getSuitedCards(board);
+
+		straight = getPossibleStraights(board).size() > 0;
+		flush = suitedCards.size() >= 3;
+
+		List<String> matches = new ArrayList<String>();
+		for (Card card : board) {
+			matches.add(getMatches(card, board));
+		}
+		
+		fullHouse = matches.contains("pairs") || matches.contains("threes");
+
+		List<List<Integer>> possibleStraightFlushes = getPossibleStraights(suitedCards);
+		straightFlush = possibleStraightFlushes.size() > 0;
+
+		if (straightFlush) {
+			for (List<Card> hand : getNeededHandsForPossibleStraights(possibleStraightFlushes)) {
+				List<Card> royalFlushCandidate = new ArrayList<Card>(suitedCards);
+				royalFlushCandidate.addAll(hand);
+				Card straightFlushCard = hasStraightFlush(royalFlushCandidate);
+				if(straightFlushCard != null) {
+					if (straightFlushCard.getValue() == 14) {
+						return hand;
+					} else {
+						bestHand = hand;
+					}
+				}
+			}
+		}
+
+		return bestHand;
 	}
 
-	public synchronized int getFlushSuit(List<Card> board) {
-		String suit = null;
-
+	public synchronized List<Card> getSuitedCards(List<Card> board) {
+		List<Card> suitedCards = new ArrayList<Card>();
 		for (String s : suits) {
 			int matches = 0;
 			for (Card card : board) {
 				if (card.getSuit().equals(s)) {
 					matches++;
+					suitedCards.add(card);
 				}
 			}
 			if (matches >= 3) {
-				suit = s;
-				return matches;
+				return suitedCards;
+			} else {
+				suitedCards.clear();
 			}
 		}
-		return -1;
+		return suitedCards;
 	}
 
-	public synchronized List<List<Integer>> getHandsForStraight(List<Card> board) {
+//	Method to get a list of cards currently on the board that, putting them together, could form a straight
+	public synchronized List<List<Integer>> getPossibleStraights(List<Card> board) {
 //		Create a new list of cards to avoid sorting the original and changing board order
 		List<Card> sortedBoard = new ArrayList<Card>();
 		sortedBoard.addAll(board);
@@ -516,6 +533,7 @@ public class Utils {
 		return combinationList;
 	}
 
+//	Method that returns a list of cards that, putting them together with the list of possible straights that gets as an argument, form a straight
 	public synchronized List<List<Card>> getNeededHandsForPossibleStraights(List<List<Integer>> possibleStraightList) {
 //		A List<> where needed hands for a straight (List<Card>) are stored
 		List<List<Card>> neededHands = new ArrayList<List<Card>>();
